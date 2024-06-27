@@ -7,3 +7,4 @@ Clyde is a content personalization engine developed for Valdosta State Universit
 - Geolocation tracking.
 - Custom user groups.
 - Dynamic CascadeCMS blocks.
+- Dashboard
