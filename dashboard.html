@@ -4,46 +4,70 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page View Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
     <style>
       body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
+        background-color: #f8f9fa;
       }
-      table {
-        width: 100%;
-        border-collapse: collapse;
+
+      .container {
+        margin-top: 50px;
       }
-      th,
-      td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
+
+      .table {
+        background-color: #ffffff;
+        border-radius: 5px;
+        overflow: hidden;
       }
-      th {
-        background-color: #f2f2f2;
+
+      .table thead th {
+        background-color: #343a40;
+        color: #ffffff;
+        text-align: center;
+      }
+
+      .table tbody tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      .table tbody td {
+        text-align: center;
       }
     </style>
   </head>
+
   <body>
-    <h1>Page View Dashboard</h1>
-    <table id="pageViewTable">
-      <thead>
-        <tr>
-          <th>User ID</th>
-          <th>Page</th>
-          <th>City</th>
-          <th>Region</th>
-          <th>Country</th>
-          <th>Device</th>
-          <!-- Add Device column -->
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Page view data will be inserted here -->
-      </tbody>
-    </table>
+    <div class="container">
+      <h1 class="text-center mb-4">Page View Dashboard</h1>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="pageViewTable">
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Page</th>
+              <th>City</th>
+              <th>Region</th>
+              <th>Country</th>
+              <th>Device</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Page view data will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Bootstrap and jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
       async function fetchPageViews() {
