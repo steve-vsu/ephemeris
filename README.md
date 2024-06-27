@@ -13,3 +13,4 @@ Ephemeris is a content personalization engine with user metrics and segmentation
 - Custom user groups.
 - Dynamic CMS blocks.
 - Admin dashboard.
+- Dynamic search engine.
