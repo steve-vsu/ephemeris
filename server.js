@@ -1,3 +1,5 @@
+require('dotenv').config(); // Add this line to load environment variables from .env file
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -7,10 +9,10 @@ const cors = require("cors");
 const PageView = require("./models/PageView"); // Ensure you have a PageView model defined
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT; // Use PORT from .env file
 
 // MongoDB connection URI
-const MONGO_URI = "mongodb://127.0.0.1:27017/trackingDB";
+const MONGO_URI = process.env.MONGO_URI;
 
 // Connect to MongoDB using async/await with enhanced error handling
 async function connectToDB() {
@@ -34,18 +36,18 @@ app.use(bodyParser.json());
 // Middleware to parse cookies
 app.use(cookieParser());
 
-// Configure CORS to allow requests from local HTML files
+// Configure CORS to allow requests from multiple origins
+const allowedOrigins = (process.env.CORS_ORIGINS || "").split(",");
+
 app.use(
   cors({
     origin: function (origin, callback) {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
-      // Allow requests from local files and specific domains
-      if (origin === "null" || origin.startsWith("file://"))
+      // Check if the origin is in the allowedOrigins list
+      if (allowedOrigins.includes(origin) || origin.startsWith("file://")) {
         return callback(null, true);
-      // Allow requests from localhost
-      if (origin === "localhost" || origin === "http://localhost")
-        return callback(null, true);
+      }
       callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
