@@ -35,11 +35,13 @@
           <th>City</th>
           <th>Region</th>
           <th>Country</th>
-          <th>Timestamp</th>
+          <th>Device</th>
+          <!-- Add Device column -->
+          <th>Date</th>
         </tr>
       </thead>
       <tbody>
-        <!-- Data will be inserted here -->
+        <!-- Page view data will be inserted here -->
       </tbody>
     </table>
 
@@ -47,20 +49,44 @@
       async function fetchPageViews() {
         try {
           const response = await fetch("http://localhost:3000/pageViews");
-          const data = await response.json();
-          const tableBody = document.querySelector("#pageViewTable tbody");
-          tableBody.innerHTML = ""; // Clear existing data
+          const pageViews = await response.json();
 
-          data.forEach((view) => {
+          const tableBody = document.querySelector("#pageViewTable tbody");
+          tableBody.innerHTML = "";
+
+          pageViews.forEach((pageView) => {
             const row = document.createElement("tr");
-            row.innerHTML = `
-            <td>${view.userId}</td>
-            <td>${view.page}</td>
-            <td>${view.location.city || "N/A"}</td>
-            <td>${view.location.region || "N/A"}</td>
-            <td>${view.location.country_name || "N/A"}</td>
-            <td>${new Date(view.createdAt).toLocaleString()}</td>
-          `;
+
+            const userIdCell = document.createElement("td");
+            userIdCell.textContent = pageView.userId;
+            row.appendChild(userIdCell);
+
+            const pageCell = document.createElement("td");
+            pageCell.textContent = pageView.page;
+            row.appendChild(pageCell);
+
+            const cityCell = document.createElement("td");
+            cityCell.textContent = pageView.location.city;
+            row.appendChild(cityCell);
+
+            const regionCell = document.createElement("td");
+            regionCell.textContent = pageView.location.region;
+            row.appendChild(regionCell);
+
+            const countryCell = document.createElement("td");
+            countryCell.textContent = pageView.location.country;
+            row.appendChild(countryCell);
+
+            const deviceCell = document.createElement("td");
+            deviceCell.textContent = pageView.device; // Add device information
+            row.appendChild(deviceCell);
+
+            const dateCell = document.createElement("td");
+            dateCell.textContent = new Date(
+              pageView.createdAt
+            ).toLocaleString();
+            row.appendChild(dateCell);
+
             tableBody.appendChild(row);
           });
         } catch (error) {
@@ -68,7 +94,6 @@
         }
       }
 
-      // Fetch page views when the page loads
       window.onload = fetchPageViews;
     </script>
   </body>

@@ -5,7 +5,7 @@ AUTHOR: Steven Sauls
   Once a POST request with userId, page, and location are received, Ephemeris logs it in the MongoDB.
  */
 
-require('dotenv').config(); // Environment variables
+require('dotenv').config(); // Add this line to load environment variables from .env file
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -13,10 +13,10 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
-const PageView = require("./models/PageView"); // Mongoose Schema for MongoDB Database
+const PageView = require("./models/PageView"); // Ensure you have a PageView model defined
 
 const app = express();
-const PORT = process.env.PORT; // Set server's listening port.
+const PORT = process.env.PORT; // Use PORT from .env file
 
 // MongoDB connection URI
 const MONGO_URI = process.env.MONGO_URI;
@@ -24,10 +24,7 @@ const MONGO_URI = process.env.MONGO_URI;
 // Connect to MongoDB using async/await with enhanced error handling
 async function connectToDB() {
   try {
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(MONGO_URI);
     console.log("Connected to MongoDB");
   } catch (error) {
     console.error("MongoDB connection error:", error);
@@ -49,11 +46,10 @@ const allowedOrigins = (process.env.CORS_ORIGINS || "").split(",");
 app.use(
   cors({
     origin: function (origin, callback) {
-      console.log(origin);
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
       // Check if the origin is in the allowedOrigins list
-      if (allowedOrigins.includes(origin) || origin.startsWith("file://")) {
+      if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
       callback(new Error("Not allowed by CORS"));
@@ -64,7 +60,7 @@ app.use(
 
 // Route to handle tracking page views using async/await
 app.post("/trackPageView", async (req, res) => {
-  const { page, userId, location } = req.body;
+  const { page, userId, location, device } = req.body;
 
   console.log(req.body);
 
@@ -78,18 +74,23 @@ app.post("/trackPageView", async (req, res) => {
       return res.status(400).send("Page data not provided");
     }
 
+    if (!device) {
+      return res.status(400).send("Device data not provided");
+    }
+
     // Sanitize inputs (example using a basic regex to allow only alphanumeric and limited characters)
     const sanitizedPage = page.replace(/[^a-zA-Z0-9-_/\.]/g, "");
 
-       // Save page view data to MongoDB
+    // Save page view data to MongoDB
     const newPageView = new PageView({
       userId,
       page: sanitizedPage,
-      location: location || {}
+      location: location || {},
+      device
     });
     await newPageView.save();
 
-    console.log("Page view tracked:", { userId, sanitizedPage, location });
+    console.log("Page view tracked:", { userId, sanitizedPage, location, device });
 
     res.sendStatus(200); // Respond with success status
   } catch (error) {

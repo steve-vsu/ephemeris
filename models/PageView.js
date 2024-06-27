@@ -32,6 +32,7 @@ const pageViewSchema = new mongoose.Schema({
     asn: String,
     org: String
   },
+  device: { type: String, required: true }, // Add device field
   createdAt: { type: Date, default: Date.now }
 });
 
