@@ -54,9 +54,9 @@ app.use(
 
 // Route to handle tracking page views using async/await
 app.post("/trackPageView", async (req, res) => {
-  const { page, userId } = req.body;
+  const { page, userId, location } = req.body;
 
-  console.log(userId, page);
+  console.log(req.body);
 
   try {
     // Validate inputs
@@ -71,11 +71,15 @@ app.post("/trackPageView", async (req, res) => {
     // Sanitize inputs (example using a basic regex to allow only alphanumeric and limited characters)
     const sanitizedPage = page.replace(/[^a-zA-Z0-9-_/]/g, "");
 
-    // Save page view data to MongoDB
-    const newPageView = new PageView({ userId, page: sanitizedPage });
+       // Save page view data to MongoDB
+    const newPageView = new PageView({
+      userId,
+      page: sanitizedPage,
+      location: location || {}
+    });
     await newPageView.save();
 
-    console.log("Page view tracked:", { userId, sanitizedPage });
+    console.log("Page view tracked:", { userId, sanitizedPage, location });
 
     res.sendStatus(200); // Respond with success status
   } catch (error) {
