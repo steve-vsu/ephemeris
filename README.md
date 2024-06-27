@@ -1,15 +1,16 @@
 # Ephemeris
 
-Ephemeris is a content personalization engine with user metrics and segmentation. Upon completion, Ephemeris will independently track user data, like page views and location, and use it to feed marketing content to custom-built dynamic blocks within your CMS.
+Ephemeris is a content personalization engine with user metrics and segmentation. With Ephemeris, you can create groups for users based on metrics (like location, device, and site usage) and dynamically serve each group personalized web content that fits their needs.
 
 ## Current Features:
 
-- User ID creation and tracking.
-- Page view tracking.
+- Track users by unique ID.
+- Site usage tracking.
 - Geolocation tracking.
 
 ## Upcoming Features:
-
+- Device tracking.
 - Custom user groups.
 - Dynamic CMS blocks.
 - Admin dashboard.
+- Dynamic search engine.
