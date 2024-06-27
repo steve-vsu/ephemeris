@@ -10,20 +10,6 @@
     <p>This page is being tracked for user interactions.</p>
 
     <script>
-      // Request for user's approximate location via IP address
-      function getUserLocation() {
-        fetch("https://ipapi.co/json/")
-          .then(function (response) {
-            response.json().then((jsonData) => {
-              console.log(jsonData);
-              return jsonData;
-            });
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      }
-
       // Function to get a cookie by name
       function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -54,6 +40,19 @@
         );
       }
 
+      // Function to fetch user's location via IP address
+      async function getUserLocation() {
+        try {
+          const response = await fetch("https://ipapi.co/json/");
+          const locationData = await response.json();
+          console.log("Location data:", locationData);
+          return locationData;
+        } catch (error) {
+          console.error("Error fetching location data:", error);
+          return null;
+        }
+      }
+
       // Function to send page view data to the server
       async function sendPageViewData() {
         let userId = getCookie("userId");
@@ -63,16 +62,18 @@
         if (!userId) {
           userId = generateUUID();
           setCookie("userId", userId, 365); // Set cookie for 1 year
-          console.log("New userId generated:", userId);
+          console.log("New userId generated and set in cookie:", userId);
+        } else {
+          console.log("Existing userId found in cookie:", userId);
         }
+
+        const locationData = await getUserLocation();
 
         const data = {
           userId: userId,
           page: page,
-          location: getUserLocation(),
+          location: locationData,
         };
-
-        console.log(data);
 
         try {
           const response = await fetch("http://localhost:3000/trackPageView", {
