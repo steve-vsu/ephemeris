@@ -49,6 +49,7 @@ const allowedOrigins = (process.env.CORS_ORIGINS || "").split(",");
 app.use(
   cors({
     origin: function (origin, callback) {
+      console.log(origin);
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
       // Check if the origin is in the allowedOrigins list
@@ -78,7 +79,7 @@ app.post("/trackPageView", async (req, res) => {
     }
 
     // Sanitize inputs (example using a basic regex to allow only alphanumeric and limited characters)
-    const sanitizedPage = page.replace(/[^a-zA-Z0-9-_/]/g, "");
+    const sanitizedPage = page.replace(/[^a-zA-Z0-9-_/\.]/g, "");
 
        // Save page view data to MongoDB
     const newPageView = new PageView({
@@ -94,6 +95,17 @@ app.post("/trackPageView", async (req, res) => {
   } catch (error) {
     console.error("Error tracking page view:", error);
     res.sendStatus(500); // Respond with server error status
+  }
+});
+
+// Additional route to fetch page views
+app.get("/pageViews", async (req, res) => {
+  try {
+    const pageViews = await PageView.find();
+    res.json(pageViews);
+  } catch (error) {
+    console.error("Error fetching page views:", error);
+    res.sendStatus(500);
   }
 });
 

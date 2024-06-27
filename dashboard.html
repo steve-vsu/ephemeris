@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page View Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Page View Dashboard</h1>
+    <table id="pageViewTable">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Page</th>
+          <th>City</th>
+          <th>Region</th>
+          <th>Country</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Data will be inserted here -->
+      </tbody>
+    </table>
+
+    <script>
+      async function fetchPageViews() {
+        try {
+          const response = await fetch("http://localhost:3000/pageViews");
+          const data = await response.json();
+          const tableBody = document.querySelector("#pageViewTable tbody");
+          tableBody.innerHTML = ""; // Clear existing data
+
+          data.forEach((view) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+            <td>${view.userId}</td>
+            <td>${view.page}</td>
+            <td>${view.location.city || "N/A"}</td>
+            <td>${view.location.region || "N/A"}</td>
+            <td>${view.location.country_name || "N/A"}</td>
+            <td>${new Date(view.createdAt).toLocaleString()}</td>
+          `;
+            tableBody.appendChild(row);
+          });
+        } catch (error) {
+          console.error("Error fetching page views:", error);
+        }
+      }
+
+      // Fetch page views when the page loads
+      window.onload = fetchPageViews;
+    </script>
+  </body>
+</html>

@@ -1,15 +1,8 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const mongoose = require("mongoose");
 
-const pageViewSchema = new Schema({
-  userId: {
-    type: String,
-    required: true
-  },
-  page: {
-    type: String,
-    required: true
-  },
+const pageViewSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  page: { type: String, required: true },
   location: {
     ip: String,
     network: String,
@@ -39,12 +32,7 @@ const pageViewSchema = new Schema({
     asn: String,
     org: String
   },
-  timestamp: {
-    type: Date,
-    default: Date.now
-  }
+  createdAt: { type: Date, default: Date.now }
 });
 
-const PageView = mongoose.model('PageView', pageViewSchema);
-
-module.exports = PageView;
+module.exports = mongoose.model("PageView", pageViewSchema);
