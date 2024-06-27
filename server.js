@@ -1,4 +1,11 @@
-require('dotenv').config(); // Add this line to load environment variables from .env file
+/* 
+AUTHOR: Steven Sauls
+  The Ephemeris server initializes and connects to a MongoDB database, then starting middlewares (CORS, parsers).
+  The server begins listening for API requests and uses CORS to verify the origin of each request.
+  Once a POST request with userId, page, and location are received, Ephemeris logs it in the MongoDB.
+ */
+
+require('dotenv').config(); // Environment variables
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -6,10 +13,10 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
-const PageView = require("./models/PageView"); // Ensure you have a PageView model defined
+const PageView = require("./models/PageView"); // Mongoose Schema for MongoDB Database
 
 const app = express();
-const PORT = process.env.PORT; // Use PORT from .env file
+const PORT = process.env.PORT; // Set server's listening port.
 
 // MongoDB connection URI
 const MONGO_URI = process.env.MONGO_URI;
