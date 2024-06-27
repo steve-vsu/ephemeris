@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page View Tracker</title>
+</head>
+<body>
+    <h1>Welcome to the Page View Tracker</h1>
+    <p>This page is being tracked for user interactions.</p>
+
+    <script>
+        // Function to get a cookie by name
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+        }
+
+        // Function to generate a random UUID
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // Function to send page view data to the server
+        async function sendPageViewData() {
+            let userId = getCookie('userId');
+            const page = window.location.pathname;
+
+            // If userId doesn't exist, create a new one
+            if (!userId) {
+                userId = generateUUID();
+                setCookie('userId', userId, 365); // Set cookie for 1 year
+                console.log('New userId generated:', userId);
+            }
+
+            const data = {
+                userId: userId,
+                page: page
+            };
+
+            console.log(data);
+
+            try {
+                const response = await fetch('http://localhost:3000/trackPageView', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    console.log('Page view tracked successfully.');
+                } else {
+                    console.error('Error tracking page view:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error tracking page view:', error);
+            }
+        }
+
+        // Send page view data when the page loads
+        window.onload = sendPageViewData;
+    </script>
+</body>
+</html>
