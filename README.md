@@ -7,9 +7,9 @@ Ephemeris is a content personalization engine with user metrics and segmentation
 - Track users by unique ID.
 - Site usage tracking.
 - Geolocation tracking.
+- Device type tracking.
 
 ## Upcoming Features:
-- Device tracking.
 - Custom user groups.
 - Dynamic CMS blocks.
 - Admin dashboard.
